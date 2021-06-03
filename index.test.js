@@ -7,7 +7,9 @@ require('dotenv').config({
 describe(`when contacting http://${process.env.NGINX_CONTAINER}`, function() {
 
 	const agent = new https.Agent({
-		rejectUnauthorized: false
+		rejectUnauthorized: false,
+		minVersion: "TLSv1.2",
+		maxVersion: "TLSv1.3"
 	});
 
 	test('should resolve', async function() {
@@ -30,12 +32,12 @@ describe(`when contacting http://${process.env.NGINX_CONTAINER}`, function() {
 	});
 
 	test('should redirect to https', async function() {
-		const response = axios({
+		const response = await axios({
 			url: `http://${process.env.NGINX_CONTAINER}`,
 			httpsAgent: agent,
 		});
 		
-		await expect(response).resolves.toMatchObject({
+		await expect(response).toMatchObject({
 			request: {
 				protocol: 'https:'
 			}

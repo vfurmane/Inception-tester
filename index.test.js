@@ -1,8 +1,23 @@
 const https = require('https');
 const axios = require('axios');
+const mysql = require('mysql');
 require('dotenv').config({
 	path: '.env.testing'
 });
+
+function connect_database() {
+	return (new Promise(function(resolve, reject) {
+		const connection = mysql.createConnection({
+			host: process.env.MARIADB_CONTAINER,
+			user: process.env.MARIADB_USER,
+			password: process.env.MARIADB_PASSWORD
+		});
+		connection.connect(function(error) {
+			if (error) return (reject(error));
+			return (resolve({}));
+		});
+	}));
+}
 
 describe(`when contacting http://${process.env.NGINX_CONTAINER}`, function() {
 
@@ -44,4 +59,18 @@ describe(`when contacting http://${process.env.NGINX_CONTAINER}`, function() {
 		});
 	});
 
+});
+
+describe('when contacting the MariaDB database with valid user credentials', function() {
+
+	test('should allow connection', async function() {
+		try {
+			const response = await connect_database();
+
+			expect(reponse).toEqual(expect.anything());
+		} catch (error) {
+			expect(error.toString()).not.toEqual(expect.stringContaining('ENOTFOUND'));
+		}
+	});
+	
 });

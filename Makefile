@@ -6,7 +6,7 @@
 #    By: vfurmane <vfurmane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 16:55:42 by vfurmane          #+#    #+#              #
-#    Updated: 2021/06/02 17:09:20 by vfurmane         ###   ########.fr        #
+#    Updated: 2021/06/03 09:03:04 by vfurmane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ build:
 		docker build -t $(NAME) .
 
 run:
-		docker run -t $(NET) $(NAME)
+		docker run -t --network=inception_default $(NAME)
 
 debug:
 ifneq ($(shell docker ps -lq -f "label=image=$(NAME)" -f "status=running" | wc -l),0)

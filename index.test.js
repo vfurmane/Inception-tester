@@ -14,7 +14,7 @@ function connect_database() {
 		});
 		connection.connect(function(error) {
 			if (error) return (reject(error));
-			return (resolve({}));
+			resolve(connection);
 		});
 	}));
 }
@@ -63,14 +63,24 @@ describe(`when contacting http://${process.env.NGINX_CONTAINER}`, function() {
 
 describe('when contacting the MariaDB database with valid user credentials', function() {
 
-	test('should allow connection', async function() {
+	test('should find the server', async function() {
 		try {
-			const response = await connect_database();
+			const connection = await connect_database();
 
-			expect(reponse).toEqual(expect.anything());
+			expect(connection).toEqual(expect.anything());
+			connection.destroy();
 		} catch (error) {
 			expect(error.toString()).not.toEqual(expect.stringContaining('ENOTFOUND'));
 		}
+	});
+
+	test('should connect to the server using the credentials', async function() {
+		const connection = connect_database();
+
+		await expect(connection).resolves.toEqual(expect.anything());
+		connection.then(function(connection) {
+			connection.destroy();
+		});
 	});
 	
 });

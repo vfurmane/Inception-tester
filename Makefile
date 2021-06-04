@@ -6,7 +6,7 @@
 #    By: vfurmane <vfurmane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 16:55:42 by vfurmane          #+#    #+#              #
-#    Updated: 2021/06/03 13:23:54 by vfurmane         ###   ########.fr        #
+#    Updated: 2021/06/04 14:05:59 by vfurmane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,10 +19,10 @@ build:
 		docker build -t $(NAME) .
 
 run:
-		docker run -t --network=inception_default $(NAME)
+		docker run -it --network=inception_default $(NAME)
 
 debug:	build
-	docker run -t --network=inception_default $(NAME) npm run test:debug
+	docker run -it --network=inception_default $(NAME) npm run test:debug
 
 clean:
 ifneq ($(shell docker ps -aq -f "label=image=$(NAME)" | wc -l),0)

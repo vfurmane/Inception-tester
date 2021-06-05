@@ -6,12 +6,13 @@
 #    By: vfurmane <vfurmane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 16:55:42 by vfurmane          #+#    #+#              #
-#    Updated: 2021/06/04 14:05:59 by vfurmane         ###   ########.fr        #
+#    Updated: 2021/06/05 17:48:51 by vfurmane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+include Makefile.cfg
+
 NAME	= node-testing
-NET		= --net=host
 
 all:	build run
 
@@ -19,10 +20,10 @@ build:
 		docker build -t $(NAME) .
 
 run:
-		docker run -it --network=inception_default $(NAME)
+		docker run -it --network=$(NETWORK) $(NAME)
 
 debug:	build
-	docker run -it --network=inception_default $(NAME) npm run test:debug
+		docker run -it --network=$(NETWORK) $(NAME) npm run test:debug
 
 clean:
 ifneq ($(shell docker ps -aq -f "label=image=$(NAME)" | wc -l),0)

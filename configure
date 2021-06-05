@@ -1,0 +1,91 @@
+#!/bin/sh
+
+NC="\033[0m"
+BOLD="\033[1m"
+ULINE="\033[4m"
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+BLUE="\033[34m"
+MAGENTA="\033[35m"
+
+fatal_error()
+{
+	if [ -z "$1" ]
+	then
+		message="fatal error"
+	else
+		message="$1"
+	fi
+	if [ -z "$2" ]
+	then
+		exit_status=1
+	else
+		exit_status=$2
+	fi
+	printf "${RED}$message${NC}\n"
+	exit $exit_status
+}
+
+cd "$(dirname "$0")"
+
+printf "+------------------------------------------------------------------------------+\n"
+printf "|                                                                              |\n"
+printf "|                                                                              |\n"
+printf "|                         ${ULINE}${MAGENTA}INCEPTION TESTER${NC} by ${YELLOW}vfurmane${NC}                         |\n"
+printf "|                                                                              |\n"
+printf "|                                                                              |\n"
+printf "+------------------------------------------------------------------------------+\n"
+printf "\n\n"
+
+if ! docker -v > /dev/null 2>&1
+then
+	fatal_error "Cannot use Docker... Are you sure Docker is installed?"
+fi
+
+printf "   ${BOLD}Configuration${NC}\n"
+printf "\n\n"
+printf "${ULINE}First, let's configure the docker network. Check the list below, "
+printf "and type in the compose network name.${NC}\n\n"
+docker network ls
+printf "\n\n"
+
+while true
+do
+	printf "Network name: "
+	read network
+
+	if [ -z "$(docker network ls -q -f name=$network)" ]
+	then
+		echo "${RED}This docker network doesn't exist... Please retry.${NC}"
+	else
+		break
+	fi
+done
+
+yn="Y"
+
+if [ -f "Makefile.cfg" ]
+then
+	while true
+	do
+		printf "${YELLOW}The file Makefile.cfg already exists. Would you like to overwrite it?${NC} [Y/n] "
+		read yn
+	
+		if [ $yn != "Y" ] && [ $yn != "n" ]
+		then
+			echo "${RED}Not a valid answer.${NC}"
+		else
+			break
+		fi
+	done
+fi
+
+if [ $yn = "n" ]
+then
+	exit 0
+fi
+
+echo "# This file was automatically generated. Plead do not edit it." > Makefile.cfg
+echo >> Makefile.cfg
+echo "NETWORK=$network" >> Makefile.cfg

@@ -22,7 +22,7 @@ You will be prompted some information, like the docker network, the MariaDB cred
 
 ## Usage
 
-Once the configuration is done, you can test your project by running the `make` command.
+Once the configuration is done, and that your docker-compose is up, you can test your project by running the `make` command.
 
 ```shell
 make
@@ -34,3 +34,6 @@ make
 
 Have you done the configuration correctly ?
 
+### No test work
+
+Is your docker-compose up ? If yes, well, either my tests are not good enough or you have a problem with your project.

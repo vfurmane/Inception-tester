@@ -43,6 +43,17 @@ then
 	fatal_error "Cannot use Docker... Are you sure Docker is installed?"
 fi
 
+if ! [ -f ".env.example" ]
+then
+	fatal_error ".env.example file not found. Please download this file from the sources."
+fi
+
+if ! grep 'MARIADB_USER=' .env.example  > /dev/null 2>&1 ||
+	! grep 'MARIADB_PASSWORD=' .env.example  > /dev/null 2>&1
+then
+	fatal_error ".env.example file has been modified. Please reset it."
+fi
+
 printf "   ${BOLD}Configuration${NC}\n"
 printf "\n\n"
 printf "${ULINE}First, let's configure the docker network. Check the list below, "
@@ -62,6 +73,13 @@ do
 		break
 	fi
 done
+
+printf "\n\n"
+printf "${ULINE}Now, let's configure the MariaDB user inside the container.${NC}\n\n"
+printf "MariaDB user: "
+read mariadb_user
+printf "MariaDB password: "
+read mariadb_password
 
 yn="Y"
 
@@ -89,3 +107,9 @@ fi
 echo "# This file was automatically generated. Plead do not edit it." > Makefile.cfg
 echo >> Makefile.cfg
 echo "NETWORK=$network" >> Makefile.cfg
+
+cp .env.example .env
+sed -Ei "s/MARIADB_USER=/MARIADB_USER=$mariadb_user/g" .env
+sed -Ei "s/MARIADB_PASSWORD=/MARIADB_PASSWORD=$mariadb_password/g" .env
+
+printf "${GREEN}All done! You are ready to go!\nTo start the tests suite, run \`make\`.${NC}\n"

@@ -1,9 +1,7 @@
 const https = require('https');
 const axios = require('axios');
 const mysql = require('mysql');
-require('dotenv').config({
-	path: '.env.testing'
-});
+require('dotenv').config();
 
 function connect_database() {
 	return (new Promise(function(resolve, reject) {

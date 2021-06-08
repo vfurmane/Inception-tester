@@ -81,6 +81,30 @@ read mariadb_user
 printf "MariaDB password: "
 read mariadb_password
 
+printf "\n\n"
+printf "${ULINE}Finally, specify the project directory.${NC}\n\n"
+
+while true
+do
+	printf "Directory (default: ../Inception): "
+	read project_dir
+
+	if [ -z "$project_dir" ]
+	then
+		project_dir="../Inception"
+		break
+	else
+		object_type=$(stat -c "%F" $project_dir)
+		if [ $? -ne 0 ]
+		then
+			printf "${RED}$object_type${NC}\n"
+		elif [ "$object_type" != "directory" ]
+		then
+			printf "${RED}$project_dir: Is not directory${NC}\n"
+		fi
+	fi
+done
+
 yn="Y"
 
 if [ -f "Makefile.cfg" ]
@@ -107,6 +131,7 @@ fi
 echo "# This file was automatically generated. Plead do not edit it." > Makefile.cfg
 echo >> Makefile.cfg
 echo "NETWORK=$network" >> Makefile.cfg
+echo "PROJECT_DIRECTORY=$project_dir" >> Makefile.cfg
 
 cp .env.example .env
 sed -Ei "s/MARIADB_USER=/MARIADB_USER=$mariadb_user/g" .env

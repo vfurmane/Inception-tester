@@ -6,7 +6,7 @@
 #    By: vfurmane <vfurmane@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 16:55:42 by vfurmane          #+#    #+#              #
-#    Updated: 2021/06/05 17:48:51 by vfurmane         ###   ########.fr        #
+#    Updated: 2021/06/08 17:05:35 by vfurmane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,9 @@ NAME	= node-testing
 all:	build run
 
 build:
+		cp -rf $(PROJECT_DIRECTORY) project
 		docker build -t $(NAME) .
+		rm -rf project
 
 run:
 		docker run -it --network=$(NETWORK) $(NAME)

@@ -1,6 +1,8 @@
 const https = require('https');
 const axios = require('axios');
 const mysql = require('mysql');
+const glob = require('glob');
+const fs = require('fs');
 require('dotenv').config();
 
 function connect_database() {
@@ -92,10 +94,24 @@ describe('when requesting the license.txt file', function() {
 	test('should resolve a file starting with WordPress - Web publishing software', async function() {
 		const response = axios({
 			url: `http://${process.env.NGINX_CONTAINER}/license.txt`,
-			httpsAgent: agent,
+			httpsAgent: agent
 		});
 
 		await expect(response).resolves.toHaveProperty('data', expect.stringMatching(/^WordPress - Web publishing software/));
+	});
+
+});
+
+describe('checking images\'s', function() {
+	
+	test('should be built from Debian Buster', async function() {
+		const files = glob.sync('project/**/*Dockerfile');
+
+		for (const file of files) {
+			const data = fs.readFileSync(file, { encoding: 'utf8' });
+
+			expect(data).toEqual(expect.stringMatching(/FROM\s+(debian:buster|alpine:(?!latest).*)/));
+		}
 	});
 
 });

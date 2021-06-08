@@ -82,3 +82,20 @@ describe('when contacting the MariaDB database with valid user credentials', fun
 	});
 	
 });
+
+describe('when requesting the license.txt file', function() {
+	
+	const agent = new https.Agent({
+		rejectUnauthorized: false,
+	});
+
+	test('should resolve a file starting with WordPress - Web publishing software', async function() {
+		const response = axios({
+			url: `http://${process.env.NGINX_CONTAINER}/license.txt`,
+			httpsAgent: agent,
+		});
+
+		await expect(response).resolves.toHaveProperty('data', expect.stringMatching(/^WordPress - Web publishing software/));
+	});
+
+});

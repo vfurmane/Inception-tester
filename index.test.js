@@ -102,6 +102,14 @@ describe('when requesting the license.txt file', function() {
 
 });
 
+describe('checking wordpress database', function() {
+	
+	test.todo('should have two users registered');
+
+	test.todo('should not contain admin for the admin user');
+
+});
+
 describe('checking images\'s', function() {
 	
 	test('should be built from Debian Buster', async function() {
@@ -113,5 +121,11 @@ describe('checking images\'s', function() {
 			expect(data).toEqual(expect.stringMatching(/FROM\s+(debian:buster|alpine:(?!latest).*)/));
 		}
 	});
+
+});
+
+describe('checking file hierarchy', function() {
+
+	test.todo('should have the Makefile and srcs folder at the root only (.env optionnal)');
 
 });
